@@ -8,6 +8,7 @@ import Header from './Components/Header';
 import Home from './Components/Home';
 import Login from './Components/Login';
 import Register from './Components/Register';
+import Order from './Components/Order';
 
 const App = () => {
   const Stack = createStackNavigator();
@@ -41,6 +42,7 @@ const App = () => {
           <Stack.Screen name="Home" component={Home} initialParams={user} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
+          <Stack.Screen name="Order" component={Order} />
         </Stack.Navigator>
       </NavigationContainer>
     </UserContext.Provider>

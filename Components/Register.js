@@ -75,7 +75,7 @@ const Register = ({navigation}) => {
 
   return(
     <>
-      <View style={styles.body}>
+      <View style={styles.container}>
         <Spinner visible={spinner}/>
         <Text style={styles.text}>Zarejestruj się</Text>
         <TextInput
@@ -97,7 +97,7 @@ const Register = ({navigation}) => {
           onChangeText={text => setRepeatPassword(text)}
         />
         <TextInput
-          placeholder="Jak chcesz się nazywać?"
+          placeholder="Imię"
           style={styles.input}
           value={name}
           onChangeText={text => setName(text)}
@@ -121,10 +121,6 @@ const Register = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container:{
-    flex: 1,
-    backgroundColor: '#131313'
-  },
-  body:{
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#131313'

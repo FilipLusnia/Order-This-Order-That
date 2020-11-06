@@ -65,7 +65,7 @@ const Login = ({navigation}) => {
 
   return(
     <>
-      <View style={styles.body}>
+      <View style={styles.container}>
         <Spinner visible={spinner}/>
         <Text style={styles.text}>Zaloguj się</Text>
         <TextInput
@@ -100,12 +100,8 @@ const Login = ({navigation}) => {
 const styles = StyleSheet.create({
   container:{
     flex: 1,
-    backgroundColor: '#131313'
-  },
-  body:{
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#131313'
+    backgroundColor: '#131313',
+    alignItems: 'center'
   },
   input:{
     backgroundColor: 'white',
