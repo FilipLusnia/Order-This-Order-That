@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import firebase from '@react-native-firebase/app';
 import firestore from '@react-native-firebase/firestore';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
 
 const Home = ({navigation}) => {
@@ -9,6 +9,33 @@ const Home = ({navigation}) => {
     const [name, setName] = useState(null);
 
     const [orders, setOrders] = useState();
+    const [orderSpinner, setOrderSpinner] = useState(false);
+    
+    const handleStatusChange = (e) => {
+      setOrderSpinner(true)
+
+      firestore().collection('orders').doc(e).get()
+      .then(doc => {
+        if(doc.data().state === 'awaiting'){
+          firestore().collection('orders').doc(e).update({
+            state: 'inProgress'
+          })
+          setOrderSpinner(false)
+        }
+        if(doc.data().state === 'inProgress'){
+          firestore().collection('orders').doc(e).update({
+            state: 'done'
+          })
+          setOrderSpinner(false)
+        }
+        if(doc.data().state === 'done'){
+          firestore().collection('orders').doc(e).update({
+            state: 'awaiting'
+          })
+          setOrderSpinner(false)
+        }
+      })
+    }
 
     useEffect(() => {
       if(user){
@@ -22,7 +49,7 @@ const Home = ({navigation}) => {
           unsubscribe()
         }
       }
-    }, [firebase])
+    }, [firestore])
 
     useEffect(() => {
         if(user){
@@ -57,8 +84,19 @@ const Home = ({navigation}) => {
             <Text style={styles.titleOrders}>Zamówienia</Text>
             {orders?.map(e => {
               return(
-                  <TouchableOpacity style={styles.orderContainer} key={e.id}>
-                    <Text style={styles.orderTitle}>Zamówienie od: <Text style={styles.orderTitleName}>{e.order.author}</Text></Text>
+                  <TouchableOpacity onPress={() => handleStatusChange(e.id)} style={styles.orderContainer} key={e.id}>
+                    <Spinner visible={orderSpinner}/>
+                    <View style={styles.orderTop}>
+                      <View style={{
+                                    width: 25,
+                                    height: 25,
+                                    position: 'absolute',
+                                    transform: [{translateX: 20}],
+                                    borderRadius: 100/2,
+                                    backgroundColor: e.order.state === 'awaiting' ? '#525252' : (e.order.state === 'inProgress' ? '#ffdf2b' : '#4ddf65')
+                                  }}/>
+                      <Text style={styles.orderTitle}>Zamówienie od: <Text style={styles.orderTitleName}>{e.order.author}</Text></Text>
+                    </View>
                     {e.order.items.map(item => {
                       return(
                         <Text key={item.item} style={styles.orderText}>{item.item}: {item.amount}</Text>
@@ -138,6 +176,9 @@ const Home = ({navigation}) => {
       paddingTop: 15,
       paddingBottom: 15,
       marginTop: 15
+    },
+    orderTop:{
+      position: 'relative'
     },
     orderTitle:{
       textAlign: 'center',
