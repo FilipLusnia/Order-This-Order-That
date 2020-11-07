@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
@@ -38,8 +38,8 @@ const Home = ({navigation}) => {
     }
 
     useEffect(() => {
-      if(user){
-        const unsubscribe = firestore().collection('orders')
+      if(name){
+        const unsubscribe = firestore().collection('orders').limit(5)
           .orderBy("time", "desc").onSnapshot(snapshot => {
             const downloadedOrders = [];
             snapshot.forEach(doc => downloadedOrders.push({order: doc.data(), id: doc.id}))
@@ -49,7 +49,7 @@ const Home = ({navigation}) => {
           unsubscribe()
         }
       }
-    }, [firestore])
+    }, [firestore, name])
 
     useEffect(() => {
         if(user){
@@ -80,8 +80,8 @@ const Home = ({navigation}) => {
             "<Text style={styles.ordersHintInProgress}>W toku</Text>" i 
             "<Text style={styles.ordersHintDone}>Zrealizowane</Text>".
           </Text>
-          <View>
-            <Text style={styles.titleOrders}>Zamówienia</Text>
+          <Text style={styles.titleOrders}>Zamówienia</Text>
+          <ScrollView>
             {orders?.map(e => {
               return(
                   <TouchableOpacity onPress={() => handleStatusChange(e.id)} style={styles.orderContainer} key={e.id}>
@@ -99,13 +99,13 @@ const Home = ({navigation}) => {
                     </View>
                     {e.order.items.map(item => {
                       return(
-                        <Text key={item.item} style={styles.orderText}>{item.item}: {item.amount}</Text>
+                        <Text key={item.item} style={styles.orderText}>{item.item}{item.amount && ': '+item.amount}</Text>
                       )
                     })}
                   </TouchableOpacity>
               )
             })}
-          </View>
+          </ScrollView>
         </View>
     )
   }
@@ -128,7 +128,7 @@ const Home = ({navigation}) => {
       width: 150,
       backgroundColor: '#589f46',
       padding: 10,
-      marginTop: 25,
+      marginTop: 45,
       borderRadius: 20,
       height: 40,
       width: 180,
@@ -144,7 +144,7 @@ const Home = ({navigation}) => {
       textAlign: 'center',
       color: 'white',
       fontFamily: 'Ubuntu-Light',
-      fontSize: 15,
+      fontSize: 14,
       marginTop: 45,
       paddingLeft: 10,
       paddingRight: 10,
@@ -152,7 +152,7 @@ const Home = ({navigation}) => {
       lineHeight: 20
     },
     ordersHintAwaiting:{
-      color: '#525252'
+      color: '#6b6b6b'
     },
     ordersHintInProgress:{
       color: '#ffdf2b'

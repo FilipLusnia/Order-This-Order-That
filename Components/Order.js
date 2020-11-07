@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
@@ -8,10 +8,12 @@ const Order = ({navigation}) => {
     const {user} = useContext(UserContext);
     const [name, setName] = useState(null);
     const [spinner, setSpinner] = useState(false);
-    const [inputList, setInputList] = useState([{ item: "", amount: 1 }]);
+    const [inputList, setInputList] = useState([{ item: "", amount: "" }]);
 
-    firestore().collection('users').doc(user?.uid).get()
-    .then(e=> setName(e.data().name));
+    if(user){
+        firestore().collection('users').doc(user?.uid).get()
+        .then(e=> setName(e.data().name));
+    }
 
     const handleInputChange = (text, i, name) => {
         const list = [...inputList];
@@ -26,7 +28,7 @@ const Order = ({navigation}) => {
     };
    
     const handleAddClick = () => {
-        setInputList([...inputList, { item: "", amount: 1 }]);
+        setInputList([...inputList, { item: "", amount: "" }]);
     };
 
     const handleSubmit = () => {
@@ -62,38 +64,43 @@ const Order = ({navigation}) => {
     return(
         <View style={styles.container}>
             <Spinner visible={spinner}/>
-            <Text style={styles.title}>Zamów </Text>
-                {inputList.map((e, i) => {
-                    return(
-                        <View style={styles.inputsContainer} key={i}>
-                            <TextInput
-                                placeholder="Przedmiot"
-                                value={e.item}
-                                style={styles.input}
-                                onChangeText={text => handleInputChange(text, i, 'item')}
-                            />
-                            <TextInput
-                                placeholder="Ilość"
-                                value={e.amount}
-                                keyboardType='numeric'
-                                style={styles.inputSmall}
-                                onChangeText={text => handleInputChange(text, i, 'amount')}
-                            />
-                            {inputList.length !== 1 && <TouchableOpacity onPress={() => handleRemoveClick(i)} style={styles.removebtn}><Text style={styles.removeText}>-</Text></TouchableOpacity>}
-                        </View>
-                    )
-                })}
-                <TouchableOpacity onPress={() => handleAddClick()} style={styles.addbtn}><Text style={styles.addText}>+</Text></TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => handleSubmit()}
-                    style={styles.approvebtn}>
-                        <Text style={styles.approveText}>Zatwierdź</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('Home')}
-                    style={styles.cancelbtn}>
-                        <Text style={styles.cancelText}>Anuluj</Text>
-                </TouchableOpacity>
+            <Text style={styles.title}>Zamów</Text>
+            <Text style={styles.orderHint}>... co tylko potrzebujesz! Tosty z ketchupem? Herbatkę? A może wydruk?</Text>
+            <ScrollView>
+                <View style={styles.container}>
+                    {inputList.map((e, i) => {
+                        return(
+                            <View style={styles.inputsContainer} key={i}>
+                                <TextInput
+                                    placeholder="Przedmiot"
+                                    value={e.item}
+                                    style={styles.input}
+                                    onChangeText={text => handleInputChange(text, i, 'item')}
+                                />
+                                <TextInput
+                                    placeholder="Ilość"
+                                    value={e.amount}
+                                    keyboardType='numeric'
+                                    style={styles.inputSmall}
+                                    onChangeText={text => handleInputChange(text, i, 'amount')}
+                                />
+                                {inputList.length !== 1 && <TouchableOpacity onPress={() => handleRemoveClick(i)} style={styles.removebtn}><Text style={styles.removeText}>-</Text></TouchableOpacity>}
+                            </View>
+                        )
+                    })}
+                    <TouchableOpacity onPress={() => handleAddClick()} style={styles.addbtn}><Text style={styles.addText}>+</Text></TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => handleSubmit()}
+                        style={styles.approvebtn}>
+                            <Text style={styles.approveText}>Zatwierdź</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate('Home')}
+                        style={styles.cancelbtn}>
+                            <Text style={styles.cancelText}>Anuluj</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
         </View>
     )
   }
@@ -112,6 +119,17 @@ const Order = ({navigation}) => {
       marginBottom: 20,
       fontSize: 20,
       letterSpacing: 1
+    },
+    orderHint:{
+        textAlign: 'center',
+        color: 'white',
+        fontFamily: 'Ubuntu-Light',
+        fontSize: 14,
+        marginBottom: 45,
+        paddingLeft: 10,
+        paddingRight: 10,
+        letterSpacing: 1,
+        lineHeight: 20
     },
     inputsContainer:{
         flexDirection: 'row',
@@ -181,6 +199,7 @@ const Order = ({navigation}) => {
         backgroundColor: '#383838',
         padding: 10,
         marginTop: 20,
+        marginBottom: 40,
         borderRadius: 20
     },
     cancelText:{
