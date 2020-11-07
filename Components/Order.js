@@ -1,13 +1,17 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
 
 const Order = ({navigation}) => {
     const {user} = useContext(UserContext);
     const [name, setName] = useState(null);
+    const [spinner, setSpinner] = useState(false);
+    const [inputList, setInputList] = useState([{ item: "", amount: 1 }]);
 
-    const [inputList, setInputList] = useState([{ item: "", amount: "" }]);
+    firestore().collection('users').doc(user?.uid).get()
+    .then(e=> setName(e.data().name));
 
     const handleInputChange = (text, i, name) => {
         const list = [...inputList];
@@ -22,11 +26,42 @@ const Order = ({navigation}) => {
     };
    
     const handleAddClick = () => {
-        setInputList([...inputList, { item: "", amount: "" }]);
+        setInputList([...inputList, { item: "", amount: 1 }]);
+    };
+
+    const handleSubmit = () => {
+        setSpinner(true);
+        const filteredList = inputList.filter(item => item.item.length > 0);
+        if(name){
+            if(filteredList.length !== 0){
+                firestore().collection("orders").add({
+                    items: filteredList,
+                    author: name,
+                    state: 'awaiting',
+                    time: new Date()
+                })
+                .then(
+                    setSpinner(false),
+                    navigation.navigate('Home')
+                )
+            } else {
+                setSpinner(false),
+                Alert.alert(
+                    'Brak danych',
+                    'Dodaj conajmniej jeden przedmiot.',
+                    [{
+                    text: 'Ok',
+                    style: 'cancel'
+                    }],
+                    {cancelable: true},
+                )
+            }
+        }
     };
 
     return(
         <View style={styles.container}>
+            <Spinner visible={spinner}/>
             <Text style={styles.title}>Zamów </Text>
                 {inputList.map((e, i) => {
                     return(
@@ -50,6 +85,7 @@ const Order = ({navigation}) => {
                 })}
                 <TouchableOpacity onPress={() => handleAddClick()} style={styles.addbtn}><Text style={styles.addText}>+</Text></TouchableOpacity>
                 <TouchableOpacity
+                    onPress={() => handleSubmit()}
                     style={styles.approvebtn}>
                         <Text style={styles.approveText}>Zatwierdź</Text>
                 </TouchableOpacity>
@@ -130,7 +166,7 @@ const Order = ({navigation}) => {
     },
     approvebtn:{
         width: 150,
-        backgroundColor: '#d0a43b',
+        backgroundColor: '#78d279',
         padding: 10,
         marginTop: 25,
         borderRadius: 20
