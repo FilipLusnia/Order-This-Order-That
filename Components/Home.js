@@ -204,7 +204,6 @@ const Home = ({navigation}) => {
       color: 'white',
       fontFamily: 'Ubuntu-Regular',
       fontSize: 17,
-      textTransform: 'capitalize',
       margin: 3
     }
   });
