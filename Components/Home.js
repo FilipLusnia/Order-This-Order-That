@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
@@ -63,6 +63,7 @@ const Home = ({navigation}) => {
     }, [user, name])
 
     return(
+      <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.container}>
           {name ?
             <Text style={styles.title}>Witaj, {name}!</Text>
@@ -81,7 +82,7 @@ const Home = ({navigation}) => {
             "<Text style={styles.ordersHintDone}>Zrealizowane</Text>".
           </Text>
           <Text style={styles.titleOrders}>Zamówienia</Text>
-          <ScrollView>
+          <View style={styles.ordersListContainer}>
             {orders?.map(e => {
               return(
                   <TouchableOpacity onPress={() => handleStatusChange(e.id)} style={styles.orderContainer} key={e.id}>
@@ -105,12 +106,16 @@ const Home = ({navigation}) => {
                   </TouchableOpacity>
               )
             })}
-          </ScrollView>
+          </View>
         </View>
+      </ScrollView>
     )
   }
   
   const styles = StyleSheet.create({
+    contentContainer:{
+      height: '100%'
+    },
     container:{
       flex: 1,
       alignItems: 'center',
@@ -168,6 +173,9 @@ const Home = ({navigation}) => {
       marginBottom: 15,
       fontSize: 20,
       letterSpacing: 1
+    },
+    ordersListContainer:{
+      marginBottom: 25
     },
     orderContainer:{
       backgroundColor: '#242424',

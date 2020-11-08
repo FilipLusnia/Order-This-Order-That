@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import { useScrollToTop } from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -10,6 +11,9 @@ const Register = ({navigation}) => {
   const [repeatPassword, setRepeatPassword] = useState('');
   const [name, setName] = useState('');
   const [spinner, setSpinner] = useState(false);
+
+  const ref = React.useRef(null);
+  useScrollToTop(ref);
 
   const handleSubmit = ()=> {
     if (login.length > 0 && password.length > 0 && 
@@ -74,7 +78,7 @@ const Register = ({navigation}) => {
   }
 
   return(
-    <>
+    <ScrollView ref={ref} contentContainerStyle={styles.contentContainer}>
       <View style={styles.container}>
         <Spinner visible={spinner}/>
         <Text style={styles.text}>Zarejestruj się</Text>
@@ -115,11 +119,14 @@ const Register = ({navigation}) => {
             <Text style={styles.loginText}>Zaloguj się</Text>
         </TouchableOpacity>
       </View>
-    </>
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
+  contentContainer:{
+    height: '100%'
+  },
   container:{
     flex: 1,
     alignItems: 'center',
@@ -161,7 +168,8 @@ const styles = StyleSheet.create({
   },
   loginbtn:{
     width: 100,
-    marginTop: 35
+    marginTop: 35,
+    marginBottom: 30
   }
 });
 

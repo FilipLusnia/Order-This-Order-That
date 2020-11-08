@@ -62,50 +62,55 @@ const Order = ({navigation}) => {
     };
 
     return(
-        <View style={styles.container}>
-            <Spinner visible={spinner}/>
-            <Text style={styles.title}>Zamów</Text>
-            <Text style={styles.orderHint}>... co tylko potrzebujesz! Tosty z ketchupem? Herbatkę? A może wydruk?</Text>
-            <ScrollView>
-                <View style={styles.container}>
-                    {inputList.map((e, i) => {
-                        return(
-                            <View style={styles.inputsContainer} key={i}>
-                                <TextInput
-                                    placeholder="Przedmiot"
-                                    value={e.item}
-                                    style={styles.input}
-                                    onChangeText={text => handleInputChange(text, i, 'item')}
-                                />
-                                <TextInput
-                                    placeholder="Ilość"
-                                    value={e.amount}
-                                    keyboardType='numeric'
-                                    style={styles.inputSmall}
-                                    onChangeText={text => handleInputChange(text, i, 'amount')}
-                                />
-                                {inputList.length !== 1 && <TouchableOpacity onPress={() => handleRemoveClick(i)} style={styles.removebtn}><Text style={styles.removeText}>-</Text></TouchableOpacity>}
-                            </View>
-                        )
-                    })}
-                    <TouchableOpacity onPress={() => handleAddClick()} style={styles.addbtn}><Text style={styles.addText}>+</Text></TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => handleSubmit()}
-                        style={styles.approvebtn}>
-                            <Text style={styles.approveText}>Zatwierdź</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        onPress={() => navigation.navigate('Home')}
-                        style={styles.cancelbtn}>
-                            <Text style={styles.cancelText}>Anuluj</Text>
-                    </TouchableOpacity>
+        <ScrollView contentContainerStyle={styles.contentContainer}>
+            <View style={styles.container}>
+                <Spinner visible={spinner}/>
+                <Text style={styles.title}>Zamów</Text>
+                <Text style={styles.orderHint}>... co tylko potrzebujesz! Tosty z ketchupem? Herbatkę? A może wydruk?</Text>
+                <View>
+                    <View style={styles.container}>
+                        {inputList.map((e, i) => {
+                            return(
+                                <View style={styles.inputsContainer} key={i}>
+                                    <TextInput
+                                        placeholder="Przedmiot"
+                                        value={e.item}
+                                        style={styles.input}
+                                        onChangeText={text => handleInputChange(text, i, 'item')}
+                                    />
+                                    <TextInput
+                                        placeholder="Ilość"
+                                        value={e.amount}
+                                        keyboardType='numeric'
+                                        style={styles.inputSmall}
+                                        onChangeText={text => handleInputChange(text, i, 'amount')}
+                                    />
+                                    {inputList.length !== 1 && <TouchableOpacity onPress={() => handleRemoveClick(i)} style={styles.removebtn}><Text style={styles.removeText}>-</Text></TouchableOpacity>}
+                                </View>
+                            )
+                        })}
+                        <TouchableOpacity onPress={() => handleAddClick()} style={styles.addbtn}><Text style={styles.addText}>+</Text></TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => handleSubmit()}
+                            style={styles.approvebtn}>
+                                <Text style={styles.approveText}>Zatwierdź</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('Home')}
+                            style={styles.cancelbtn}>
+                                <Text style={styles.cancelText}>Anuluj</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </ScrollView>
-        </View>
+            </View>
+        </ScrollView>
     )
   }
   
   const styles = StyleSheet.create({
+    contentContainer:{
+        height: '100%'
+    },
     container:{
       flex: 1,
       backgroundColor: '#131313',
@@ -198,7 +203,7 @@ const Order = ({navigation}) => {
         width: 150,
         backgroundColor: '#383838',
         padding: 10,
-        marginTop: 20,
+        marginTop: 15,
         marginBottom: 40,
         borderRadius: 20
     },
