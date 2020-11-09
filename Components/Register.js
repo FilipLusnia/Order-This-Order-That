@@ -125,7 +125,7 @@ const Register = ({navigation}) => {
 
 const styles = StyleSheet.create({
   contentContainer:{
-    height: '100%'
+    flexGrow:1
   },
   container:{
     flex: 1,

@@ -49,7 +49,7 @@ const Order = ({navigation}) => {
                     getFcmToken = async () => { fcmToken = await messaging().getToken() }
                 )
                 .then(
-                    fetch('https://fcm.googleapis.com/v1/projects/order-this-order-that/messages:send HTTP/1.1', {
+                    fetch('https://fcm.googleapis.com/v1/projects/order-this-order-that/messages:send', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -132,7 +132,7 @@ const Order = ({navigation}) => {
   
   const styles = StyleSheet.create({
     contentContainer:{
-        height: '100%'
+        flexGrow:1
     },
     container:{
       flex: 1,
