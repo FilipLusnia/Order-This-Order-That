@@ -63,7 +63,7 @@ const Order = ({navigation}) => {
                                 "title":"FCM Message"
                             }
                         }  
-                    }).then(e => console.log(e)).catch(e => console.log(e))
+                    }).then(e => console.log(e)).catch(e => console.log(e))  //work in progress
                 )
                 .then(
                     setSpinner(false),
