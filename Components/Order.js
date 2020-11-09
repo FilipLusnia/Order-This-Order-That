@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import messaging from '@react-native-firebase/messaging';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
 
@@ -35,6 +36,8 @@ const Order = ({navigation}) => {
         setSpinner(true);
         const filteredList = inputList.filter(item => item.item.length > 0);
         if(name){
+            let fcmToken = null;
+
             if(filteredList.length !== 0){
                 firestore().collection("orders").add({
                     items: filteredList,
@@ -42,6 +45,26 @@ const Order = ({navigation}) => {
                     state: 'awaiting',
                     time: new Date()
                 })
+                .then(
+                    getFcmToken = async () => { fcmToken = await messaging().getToken() }
+                )
+                .then(
+                    fetch('https://fcm.googleapis.com/v1/projects/order-this-order-that/messages:send HTTP/1.1', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': fcmToken
+                        },
+                        "message":{
+                            "token": fcmToken,
+                            "data":{},
+                            "notification":{
+                                "body":"This is an FCM notification message!",
+                                "title":"FCM Message"
+                            }
+                        }  
+                    }).then(e => console.log(e)).catch(e => console.log(e))
+                )
                 .then(
                     setSpinner(false),
                     navigation.navigate('Home')

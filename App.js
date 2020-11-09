@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text} from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
@@ -16,37 +16,10 @@ const App = () => {
 
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
-
-  messaging().setBackgroundMessageHandler(async remoteMessage => {
-    console.log('Message handled in the background!', remoteMessage);
-  });
-
-  const requestUserPermission = async () => {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      getFcmToken()
-      console.log('Authorization status:', authStatus);
-    }
-  }
-
-  getFcmToken = async () => {
-    const fcmToken = await messaging().getToken();
-    if (fcmToken) {
-     console.log(fcmToken);
-     console.log("Your Firebase Token is:", fcmToken);
-    } else {
-     console.log("Failed", "No token received");
-    }
-  }
   
   useEffect(() => {
-    requestUserPermission();
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    const unsubscribe = messaging().onMessage(async e => {
+      Alert.alert(e.notification.title, e.notification.body);
     });
     return unsubscribe;
    }, []);
