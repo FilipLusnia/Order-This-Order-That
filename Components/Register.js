@@ -22,7 +22,7 @@ const Register = ({navigation}) => {
 
       auth().createUserWithEmailAndPassword(login, password)
         .then(resp => {
-          return firestore().collection('users').doc(resp.user.uid).set({
+          firestore().collection('users').doc(resp.user.uid).set({
             name: name
           })
         })

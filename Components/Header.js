@@ -11,7 +11,7 @@ const Header = ({user}) => {
       {user ?
         <TouchableOpacity
           style={styles.logoutbtn}
-          onPress={() => { auth().signOut()}}>
+          onPress={() => { auth().signOut() }}>
             <Text style={styles.logoutText}>Wyloguj</Text>
         </TouchableOpacity>
         :

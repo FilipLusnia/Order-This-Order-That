@@ -52,15 +52,15 @@ const Home = ({navigation}) => {
     }, [firestore, name])
 
     useEffect(() => {
-        if(user.uid){
-          firestore().collection('users').doc(user.uid).get()
+        if(user?.uid){
+          firestore().collection('users').doc(user?.uid).get()
           .then(e=> setName(e.data().name))
         }
-        if(!user.uid){
+        if(!user){
             navigation.navigate('Login')
             setName(null)
         }
-    }, [user, name])
+    }, [name, user])
 
     return(
       <ScrollView contentContainerStyle={styles.contentContainer}>
