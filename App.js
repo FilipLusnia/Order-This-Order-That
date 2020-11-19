@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
+import firestore from '@react-native-firebase/firestore';
 import {UserContext} from './Components/UserContext';
 import Header from './Components/Header';
 import Home from './Components/Home';
@@ -16,8 +17,30 @@ const App = () => {
 
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
+  const [token, setToken] = useState();
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  useEffect(() => {
+    if(token && user){
+      firestore().collection('users').doc(user?.uid).update({
+        deviceToken: token
+      })
+    }
+  }, [token, user]);
   
   useEffect(() => {
+    const fetchToken = async () => {
+      const aquiredToken = await messaging().getToken()
+      if (aquiredToken){
+        setToken(aquiredToken);
+      }
+    }
+    fetchToken()
+
     const unsubscribe = messaging().onMessage(async e => {
       Alert.alert(e.notification.title, e.notification.body);
     });
@@ -28,11 +51,6 @@ const App = () => {
     setUser(user);
     if (initializing) setInitializing(false);
   }
- 
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
 
   if (initializing) {
     return (
@@ -47,7 +65,7 @@ const App = () => {
       <NavigationContainer>
         <Header user={user}/>
         <Stack.Navigator screenOptions={{ headerShown: false }}> 
-          <Stack.Screen name="Home" component={Home} initialParams={user} />
+          <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Register" component={Register} />
           <Stack.Screen name="Order" component={Order} />

@@ -1,16 +1,16 @@
 import React, { useState, useContext } from 'react';
 import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import messaging from '@react-native-firebase/messaging';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
 
 const Order = ({navigation}) => {
+
     const {user} = useContext(UserContext);
     const [name, setName] = useState(null);
     const [spinner, setSpinner] = useState(false);
     const [inputList, setInputList] = useState([{ item: "", amount: "" }]);
-
+    
     if(user){
         firestore().collection('users').doc(user?.uid).get()
         .then(e=> setName(e.data().name));
@@ -35,9 +35,8 @@ const Order = ({navigation}) => {
     const handleSubmit = () => {
         setSpinner(true);
         const filteredList = inputList.filter(item => item.item.length > 0);
-        if(name){
-            let fcmToken = null;
 
+        if(name){
             if(filteredList.length !== 0){
                 firestore().collection("orders").add({
                     items: filteredList,
@@ -46,26 +45,7 @@ const Order = ({navigation}) => {
                     time: new Date()
                 })
                 .then(
-                    getFcmToken = async () => { fcmToken = await messaging().getToken() }
-                )
-                .then(
-                    fetch('https://fcm.googleapis.com/v1/projects/order-this-order-that/messages:send', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': fcmToken
-                        },
-                        "message":{
-                            "token": fcmToken,
-                            "data":{},
-                            "notification":{
-                                "body":"This is an FCM notification message!",
-                                "title":"FCM Message"
-                            }
-                        }  
-                    }).then(e => console.log(e)).catch(e => console.log(e))  //work in progress
-                )
-                .then(
+                    fetch('https://order-this-order-that.ew.r.appspot.com/sendOrderNotification'),
                     setSpinner(false),
                     navigation.navigate('Home')
                 )
@@ -132,7 +112,7 @@ const Order = ({navigation}) => {
   
   const styles = StyleSheet.create({
     contentContainer:{
-        flexGrow:1
+        height: '100%'
     },
     container:{
       flex: 1,
