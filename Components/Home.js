@@ -52,11 +52,11 @@ const Home = ({navigation}) => {
     }, [firestore, name])
 
     useEffect(() => {
-        if(user){
-          firestore().collection('users').doc(user?.uid).get()
+        if(user.uid){
+          firestore().collection('users').doc(user.uid).get()
           .then(e=> setName(e.data().name))
         }
-        if(!user){
+        if(!user.uid){
             navigation.navigate('Login')
             setName(null)
         }
