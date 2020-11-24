@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, TextInput, Text, TouchableOpacity, Alert, ScrollView, KeyboardAvoidingView } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {UserContext} from './UserContext';
@@ -69,8 +69,8 @@ const Order = ({navigation}) => {
             <View style={styles.container}>
                 <Spinner visible={spinner}/>
                 <Text style={styles.title}>Zamów</Text>
-                <Text style={styles.orderHint}>... co tylko potrzebujesz! Tosty z ketchupem? Herbatkę? A może wydruk?</Text>
-                <View>
+                <Text style={styles.orderHint}>... co tylko potrzebujesz! Posiłek? Herbatę? A może wydruk?</Text>
+                <KeyboardAvoidingView>
                     <View style={styles.container}>
                         {inputList.map((e, i) => {
                             return(
@@ -104,7 +104,7 @@ const Order = ({navigation}) => {
                                 <Text style={styles.cancelText}>Anuluj</Text>
                         </TouchableOpacity>
                     </View>
-                </View>
+                </KeyboardAvoidingView>
             </View>
         </ScrollView>
     )
@@ -112,7 +112,7 @@ const Order = ({navigation}) => {
   
   const styles = StyleSheet.create({
     contentContainer:{
-        height: '100%'
+        flexGrow: 1
     },
     container:{
       flex: 1,

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, ScrollView, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, TextInput, TouchableOpacity, Alert, KeyboardAvoidingView } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useScrollToTop } from '@react-navigation/native';
@@ -69,7 +69,7 @@ const Login = ({navigation}) => {
 
   return(
     <ScrollView ref={ref} contentContainerStyle={styles.contentContainer}>
-      <View style={styles.container}>
+      <KeyboardAvoidingView style={styles.container}>
         <Spinner visible={spinner}/>
         <Text style={styles.text}>Zaloguj się</Text>
         <TextInput
@@ -96,14 +96,14 @@ const Login = ({navigation}) => {
           style={styles.registerbtn}>
             <Text style={styles.registerText}>Załóż konto</Text>
         </TouchableOpacity>
-      </View>
+      </KeyboardAvoidingView>
     </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   contentContainer:{
-    flexGrow:1
+    flexGrow: 1
   },
   container:{
     flex: 1,
@@ -113,31 +113,34 @@ const styles = StyleSheet.create({
   input:{
     backgroundColor: 'white',
     margin: 10,
-    width: 300,
+    width: 280,
     borderRadius: 20,
     padding: 10,
     fontFamily: 'Ubuntu-Regular',
     textAlign: 'center'
   },  
   text:{
-      color: 'white',
-      textAlign: 'center',
-      fontFamily: 'Ubuntu-Light',
-      fontSize: 24,
-      marginTop: 60,
-      marginBottom: 30
+    color: 'white',
+    textAlign: 'center',
+    fontFamily: 'Ubuntu-Light',
+    fontSize: 24,
+    marginTop: 60,
+    marginBottom: 30
   },
   loginText:{
     textAlign: 'center',
     color: 'white',
     fontFamily: 'Ubuntu-Regular',
+    fontSize: 17
   },
   loginbtn:{
-    width: 150,
+    width: 160,
     backgroundColor: '#39e36f',
     padding: 10,
+    height: 40,
     marginTop: 25,
-    borderRadius: 20
+    borderRadius: 20,
+    justifyContent: 'center'
   },
   registerText:{
     textAlign: 'center',

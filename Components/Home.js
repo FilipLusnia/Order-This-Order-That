@@ -52,9 +52,10 @@ const Home = ({navigation}) => {
     }, [firestore, name])
 
     useEffect(() => {
-        if(user?.uid){
-          firestore().collection('users').doc(user?.uid).get()
-          .then(e=> setName(e.data().name))
+        if(user){
+          firestore().collection('users').doc(user?.uid).onSnapshot(user => {
+            setName(user?.data().name)
+          })
         }
         if(!user){
             navigation.navigate('Login')
@@ -68,7 +69,7 @@ const Home = ({navigation}) => {
           {name ?
             <Text style={styles.title}>Witaj, {name}!</Text>
           :
-            <></>
+            <Spinner/>
           }
           <TouchableOpacity
             onPress={() => navigation.navigate('Order')}
@@ -114,7 +115,7 @@ const Home = ({navigation}) => {
   
   const styles = StyleSheet.create({
     contentContainer:{
-      flexGrow:1
+      flexGrow: 1
     },
     container:{
       flex: 1,
@@ -125,32 +126,31 @@ const Home = ({navigation}) => {
       textAlign: 'center',
       color: 'white',
       fontFamily: 'Ubuntu-Bold',
-      marginTop: 20,
+      marginTop: 30,
       fontSize: 20,
       letterSpacing: 1
     },
     orderbtn:{
-      width: 150,
-      backgroundColor: '#589f46',
+      width: 220,
+      backgroundColor: '#33d266',
       padding: 10,
-      marginTop: 45,
+      marginTop: 55,
       borderRadius: 20,
-      height: 40,
-      width: 180,
+      height: 50,
       justifyContent: 'center'
     },
     orderbtnText:{
       textAlign: 'center',
       color: 'white',
       fontFamily: 'Ubuntu-Regular',
-      fontSize: 20
+      fontSize: 22
     },
     ordersHint:{
       textAlign: 'center',
       color: 'white',
       fontFamily: 'Ubuntu-Light',
       fontSize: 14,
-      marginTop: 45,
+      marginTop: 35,
       paddingLeft: 10,
       paddingRight: 10,
       letterSpacing: 1,
@@ -169,7 +169,7 @@ const Home = ({navigation}) => {
       textAlign: 'center',
       color: 'white',
       fontFamily: 'Ubuntu-Bold',
-      marginTop: 40,
+      marginTop: 35,
       marginBottom: 15,
       fontSize: 20,
       letterSpacing: 1
