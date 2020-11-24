@@ -78,7 +78,7 @@ const Register = ({navigation}) => {
   }
 
   return(
-    <ScrollView ref={ref} contentContainerStyle={styles.contentContainer}>
+    <ScrollView ref={ref} keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
       <KeyboardAvoidingView style={styles.container}>
         <Spinner visible={spinner}/>
         <Text style={styles.text}>Zarejestruj się</Text>

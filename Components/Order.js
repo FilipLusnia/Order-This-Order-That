@@ -65,7 +65,7 @@ const Order = ({navigation}) => {
     };
 
     return(
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+        <ScrollView keyboardShouldPersistTaps="always" contentContainerStyle={styles.contentContainer}>
             <View style={styles.container}>
                 <Spinner visible={spinner}/>
                 <Text style={styles.title}>Zamów</Text>
@@ -80,6 +80,7 @@ const Order = ({navigation}) => {
                                         value={e.item}
                                         style={styles.input}
                                         onChangeText={text => handleInputChange(text, i, 'item')}
+                                        blurOnSubmit={false} 
                                     />
                                     <TextInput
                                         placeholder="Ilość"
@@ -87,6 +88,7 @@ const Order = ({navigation}) => {
                                         keyboardType='numeric'
                                         style={styles.inputSmall}
                                         onChangeText={text => handleInputChange(text, i, 'amount')}
+                                        blurOnSubmit={false} 
                                     />
                                     {inputList.length !== 1 && <TouchableOpacity onPress={() => handleRemoveClick(i)} style={styles.removebtn}><Text style={styles.removeText}>-</Text></TouchableOpacity>}
                                 </View>

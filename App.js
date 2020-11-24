@@ -45,7 +45,7 @@ const App = () => {
       Alert.alert(e.notification.title, e.notification.body);
     });
     return unsubscribe;
-   }, []);
+  }, []);
 
   function onAuthStateChanged(user) {
     setUser(user);
