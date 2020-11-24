@@ -6,7 +6,7 @@ App has an option to change order's status too.
 
 ## Demo
 
-![](orderthisorderthat-gif.gif)
+<img src="orderthisorderthat-gif.gif" height="550"/>
 
 ## Installation
 If you want to run it locally, you need to install an Android Studio or use Expo.
